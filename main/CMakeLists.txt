@@ -5,6 +5,7 @@ set(SOURCES "audio_codecs/audio_codec.cc"
             "audio_codecs/es8374_audio_codec.cc"
             "audio_codecs/es8388_audio_codec.cc"
             "audio_processing/audio_debugger.cc"
+            "icon/icon_01.c"
             "led/single_led.cc"
             "led/circular_strip.cc"
             "led/gpio_led.cc"
@@ -87,6 +88,8 @@ elseif(CONFIG_BOARD_TYPE_ATOMS3_ECHO_BASE)
     set(BOARD_TYPE "atoms3-echo-base")
 elseif(CONFIG_BOARD_TYPE_ATOMS3R_ECHO_BASE)
     set(BOARD_TYPE "atoms3r-echo-base")
+elseif(CONFIG_BOARD_TYPE_ATOMS3R_ECHO_BASE_CUSTOM)
+    set(BOARD_TYPE "atoms3r-echo-base-custom")
 elseif(CONFIG_BOARD_TYPE_ATOMS3R_CAM_M12_ECHO_BASE)
     set(BOARD_TYPE "atoms3r-cam-m12-echo-base")
 elseif(CONFIG_BOARD_TYPE_ATOMMATRIX_ECHO_BASE)
@@ -198,6 +201,7 @@ elseif(CONFIG_BOARD_TYPE_BREAD_COMPACT_WIFI_CAM)
 endif()
 file(GLOB BOARD_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/*.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/*.c
 )
 list(APPEND SOURCES ${BOARD_SOURCES})

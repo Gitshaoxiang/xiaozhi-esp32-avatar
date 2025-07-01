@@ -9,6 +9,9 @@
 
 #include <atomic>
 
+#include <Avatar.h>
+using namespace m5avatar;
+
 // Theme color structure
 struct ThemeColors {
     lv_color_t background;
@@ -22,17 +25,16 @@ struct ThemeColors {
     lv_color_t low_battery;
 };
 
-
 class LcdDisplay : public Display {
-protected:
+   protected:
     esp_lcd_panel_io_handle_t panel_io_ = nullptr;
-    esp_lcd_panel_handle_t panel_ = nullptr;
-    
+    esp_lcd_panel_handle_t panel_       = nullptr;
+
     lv_draw_buf_t draw_buf_;
-    lv_obj_t* status_bar_ = nullptr;
-    lv_obj_t* content_ = nullptr;
-    lv_obj_t* container_ = nullptr;
-    lv_obj_t* side_bar_ = nullptr;
+    lv_obj_t* status_bar_    = nullptr;
+    lv_obj_t* content_       = nullptr;
+    lv_obj_t* container_     = nullptr;
+    lv_obj_t* side_bar_      = nullptr;
     lv_obj_t* preview_image_ = nullptr;
 
     DisplayFonts fonts_;
@@ -42,18 +44,19 @@ protected:
     virtual bool Lock(int timeout_ms = 0) override;
     virtual void Unlock() override;
 
-protected:
+   protected:
     // 添加protected构造函数
-    LcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_t panel, DisplayFonts fonts, int width, int height);
-    
-public:
+    LcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_t panel,
+               DisplayFonts fonts, int width, int height);
+
+   public:
     ~LcdDisplay();
     virtual void SetEmotion(const char* emotion) override;
     virtual void SetIcon(const char* icon) override;
     virtual void SetPreviewImage(const lv_img_dsc_t* img_dsc) override;
 #if CONFIG_USE_WECHAT_MESSAGE_STYLE
-    virtual void SetChatMessage(const char* role, const char* content) override; 
-#endif  
+    virtual void SetChatMessage(const char* role, const char* content) override;
+#endif
 
     // Add theme switching function
     virtual void SetTheme(const std::string& theme_name) override;
@@ -61,46 +64,89 @@ public:
 
 // RGB LCD显示器
 class RgbLcdDisplay : public LcdDisplay {
-public:
-    RgbLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_t panel,
-                  int width, int height, int offset_x, int offset_y,
-                  bool mirror_x, bool mirror_y, bool swap_xy,
-                  DisplayFonts fonts);
+   public:
+    RgbLcdDisplay(esp_lcd_panel_io_handle_t panel_io,
+                  esp_lcd_panel_handle_t panel, int width, int height,
+                  int offset_x, int offset_y, bool mirror_x, bool mirror_y,
+                  bool swap_xy, DisplayFonts fonts);
 };
 
 // MIPI LCD显示器
 class MipiLcdDisplay : public LcdDisplay {
-public:
-    MipiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_t panel,
-                   int width, int height, int offset_x, int offset_y,
-                   bool mirror_x, bool mirror_y, bool swap_xy,
-                   DisplayFonts fonts);
+   public:
+    MipiLcdDisplay(esp_lcd_panel_io_handle_t panel_io,
+                   esp_lcd_panel_handle_t panel, int width, int height,
+                   int offset_x, int offset_y, bool mirror_x, bool mirror_y,
+                   bool swap_xy, DisplayFonts fonts);
 };
 
 // // SPI LCD显示器
 class SpiLcdDisplay : public LcdDisplay {
-public:
-    SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_t panel,
-                  int width, int height, int offset_x, int offset_y,
-                  bool mirror_x, bool mirror_y, bool swap_xy,
-                  DisplayFonts fonts);
+   public:
+    SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io,
+                  esp_lcd_panel_handle_t panel, int width, int height,
+                  int offset_x, int offset_y, bool mirror_x, bool mirror_y,
+                  bool swap_xy, DisplayFonts fonts);
+};
+
+// // avatar
+class avatarDisplay : public Display {
+   private:
+    Avatar* avatar = nullptr;
+
+   protected:
+    Avatar* _avatar = nullptr;
+
+   protected:
+    virtual bool Lock(int timeout_ms = 0) override {
+        return true;
+    }
+
+    virtual void Unlock() override {
+        return;
+    }
+
+   public:
+    avatarDisplay(Avatar* avatar) : _avatar(avatar) {
+    }
+
+    virtual void SetEmotion(const char* emotion) override {
+        return;
+    }
+    virtual void SetIcon(const char* icon) override {
+        return;
+    }
+    virtual void SetPreviewImage(const lv_img_dsc_t* img_dsc) override {
+        _avatar->setSpeechText("Hello");
+        return;
+    }
+    virtual void SetChatMessage(const char* role,
+                                const char* content) override {
+        _avatar->setSpeechText(content);
+        return;
+    }
+
+    // Add theme switching function
+    virtual void SetTheme(const std::string& theme_name) override {
+        return;
+    }
 };
 
 // QSPI LCD显示器
 class QspiLcdDisplay : public LcdDisplay {
-public:
-    QspiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_t panel,
-                   int width, int height, int offset_x, int offset_y,
-                   bool mirror_x, bool mirror_y, bool swap_xy,
-                   DisplayFonts fonts);
+   public:
+    QspiLcdDisplay(esp_lcd_panel_io_handle_t panel_io,
+                   esp_lcd_panel_handle_t panel, int width, int height,
+                   int offset_x, int offset_y, bool mirror_x, bool mirror_y,
+                   bool swap_xy, DisplayFonts fonts);
 };
 
 // MCU8080 LCD显示器
 class Mcu8080LcdDisplay : public LcdDisplay {
-public:
-    Mcu8080LcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_t panel,
-                      int width, int height, int offset_x, int offset_y,
-                      bool mirror_x, bool mirror_y, bool swap_xy,
-                      DisplayFonts fonts);
+   public:
+    Mcu8080LcdDisplay(esp_lcd_panel_io_handle_t panel_io,
+                      esp_lcd_panel_handle_t panel, int width, int height,
+                      int offset_x, int offset_y, bool mirror_x, bool mirror_y,
+                      bool swap_xy, DisplayFonts fonts);
 };
-#endif // LCD_DISPLAY_H
+#endif  // LCD_DISPLAY_H

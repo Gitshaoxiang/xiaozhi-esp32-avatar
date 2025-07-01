@@ -13,6 +13,9 @@
 
 #include "board.h"
 
+extern lv_image_dsc_t icon_01;
+
+
 #define TAG "LcdDisplay"
 
 // Color definitions for dark theme
@@ -746,6 +749,10 @@ void LcdDisplay::SetupUI() {
     lv_obj_set_style_text_color(emotion_label_, current_theme_.text, 0);
     lv_label_set_text(emotion_label_, FONT_AWESOME_AI_CHIP);
 
+    lv_obj_t * emotion_pic_ = lv_img_create(content_);
+    lv_img_set_src(emotion_pic_, &icon_01);
+    lv_obj_center(emotion_pic_);
+
     preview_image_ = lv_image_create(content_);
     lv_obj_set_size(preview_image_, width_ * 0.5, height_ * 0.5);
     lv_obj_align(preview_image_, LV_ALIGN_CENTER, 0, 0);
@@ -873,20 +880,26 @@ void LcdDisplay::SetEmotion(const char* emotion) {
         return;
     }
 
-    // 如果找到匹配的表情就显示对应图标，否则显示默认的neutral表情
-    lv_obj_set_style_text_font(emotion_label_, fonts_.emoji_font, 0);
-    if (it != emotions.end()) {
-        lv_label_set_text(emotion_label_, it->icon);
-    } else {
-        lv_label_set_text(emotion_label_, "😶");
-    }
+    // // 如果找到匹配的表情就显示对应图标，否则显示默认的neutral表情
+    // lv_obj_set_style_text_font(emotion_label_, fonts_.emoji_font, 0);
+    // if (it != emotions.end()) {
+    //     lv_label_set_text(emotion_label_, it->icon);
+    // } else {
+    //     lv_label_set_text(emotion_label_, "😶");
+    // }
+
+    // lv_obj_t * emotion_pic_ = lv_img_create(lv_screen_active());
+    // lv_img_set_src(emotion_pic_, &icon_01);
+    // lv_obj_center(emotion_pic_);
 
 #if !CONFIG_USE_WECHAT_MESSAGE_STYLE
     // 显示emotion_label_，隐藏preview_image_
-    lv_obj_clear_flag(emotion_label_, LV_OBJ_FLAG_HIDDEN);
-    if (preview_image_ != nullptr) {
-        lv_obj_add_flag(preview_image_, LV_OBJ_FLAG_HIDDEN);
-    }
+    // lv_obj_clear_flag(emotion_label_, LV_OBJ_FLAG_HIDDEN);
+    // if (preview_image_ != nullptr) {
+    //     lv_obj_add_flag(preview_image_, LV_OBJ_FLAG_HIDDEN);
+    // }
+    lv_obj_add_flag(emotion_label_, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(preview_image_, LV_OBJ_FLAG_HIDDEN);
 #endif
 }
 
@@ -895,16 +908,16 @@ void LcdDisplay::SetIcon(const char* icon) {
     if (emotion_label_ == nullptr) {
         return;
     }
-    lv_obj_set_style_text_font(emotion_label_, &font_awesome_30_4, 0);
-    lv_label_set_text(emotion_label_, icon);
+//     lv_obj_set_style_text_font(emotion_label_, &font_awesome_30_4, 0);
+//     lv_label_set_text(emotion_label_, icon);
 
-#if !CONFIG_USE_WECHAT_MESSAGE_STYLE
-    // 显示emotion_label_，隐藏preview_image_
-    lv_obj_clear_flag(emotion_label_, LV_OBJ_FLAG_HIDDEN);
-    if (preview_image_ != nullptr) {
-        lv_obj_add_flag(preview_image_, LV_OBJ_FLAG_HIDDEN);
-    }
-#endif
+// #if !CONFIG_USE_WECHAT_MESSAGE_STYLE
+//     // 显示emotion_label_，隐藏preview_image_
+//     lv_obj_clear_flag(emotion_label_, LV_OBJ_FLAG_HIDDEN);
+//     if (preview_image_ != nullptr) {
+//         lv_obj_add_flag(preview_image_, LV_OBJ_FLAG_HIDDEN);
+//     }
+// #endif
 }
 
 void LcdDisplay::SetTheme(const std::string& theme_name) {
