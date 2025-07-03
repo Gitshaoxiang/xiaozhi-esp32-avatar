@@ -302,6 +302,8 @@ class AtomS3rEchoBaseBoard : public WifiBoard {
    public:
     AtomS3rEchoBaseBoard() : boot_button_(BOOT_BUTTON_GPIO) {
         M5.begin();
+        M5.Lcd.setFont(&fonts::efontCN_14_b);
+    
         avatar.init();  // start drawing
 
         // adjust position
@@ -309,12 +311,12 @@ class AtomS3rEchoBaseBoard : public WifiBoard {
         const auto scale_w = M5.Display.width() / (float)r->getWidth();
         const auto scale_h = M5.Display.height() / (float)r->getHeight();
         const auto scale   = std::min(scale_w, scale_h);
-        avatar.setScale(scale + 0.1f);
+        avatar.setScale(scale);
         const auto offs_x = (r->getWidth() - M5.Display.width()) / 2;
         const auto offs_y = (r->getHeight() - M5.Display.height()) / 2;
         avatar.setPosition(-offs_y, -offs_x);
 
-        avatar.setSpeechFont(&fonts::efontCN_12);
+        avatar.setSpeechFont(&fonts::efontCN_14_b);
         display_ = new avatarDisplay(&avatar);
 
         InitializeI2c();

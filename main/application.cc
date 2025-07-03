@@ -32,6 +32,8 @@
 #include <driver/gpio.h>
 #include <arpa/inet.h>
 
+#include "lcd_display.h"
+
 #define TAG "Application"
 
 
@@ -843,7 +845,63 @@ void Application::OnAudioOutput() {
             output_resampler_.Process(pcm.data(), pcm.size(), resampled.data());
             pcm = std::move(resampled);
         }
-        codec->OutputData(pcm);
+        auto& board = Board::GetInstance();
+        auto display = board.GetDisplay();
+
+        // struct TaskArgs {
+        //     avatarDisplay* display;
+        //     std::vector<int16_t>* audioData;
+        // };
+        
+        // TaskArgs* args = new TaskArgs{(avatarDisplay*)display, &pcm}; 
+
+        // xTaskCreate([](void* arg) {
+        //     TaskArgs* taskArgs = static_cast<TaskArgs*>(arg);
+        //     std::vector<int16_t>* audioData = taskArgs->audioData;
+        //     avatarDisplay* display = taskArgs->display;
+            
+        //     for (size_t i = 0; i < audioData->size(); ++i) {
+        //         int level = abs((*audioData)[i]);
+        //         float f = static_cast<float>(level) / 32767.0f;
+        //         float open = std::min(1.0f, f);
+                
+        //         if (display->_avatar) {
+        //             display->_avatar->setMouthOpenRatio(open);
+        //         }
+                
+        //         if (i % 1320 == 0) {
+        //             vTaskDelay(pdMS_TO_TICKS(33));
+        //         }
+        //     }
+        //     vTaskDelete(NULL);
+        // }, "avatar_lip_sync", 4096 * 2, args, 8, NULL);
+
+    avatarDisplay* avatar_disp = static_cast<avatarDisplay*>(display);
+
+    // 配置参数
+    constexpr size_t AUDIO_BLOCK_SIZE = 1024; 
+    float mouth_open = 0.0f;
+
+    for (size_t pos = 0; pos < pcm.size(); pos += AUDIO_BLOCK_SIZE) {
+        auto block_begin = pcm.begin() + pos;
+        auto block_end = pos + AUDIO_BLOCK_SIZE < pcm.size() ? 
+                    pcm.begin() + pos + AUDIO_BLOCK_SIZE : 
+                    pcm.end();
+        
+        if (block_begin != block_end) {
+            float level = (*block_begin) / 12000.0f;
+            mouth_open = std::min(1.0f, level); 
+            
+            if (avatar_disp->_avatar) {
+                avatar_disp->_avatar->setMouthOpenRatio(mouth_open);
+            }
+        }
+        
+        // 4. 输出整个音频块
+        std::vector<int16_t> current_block(block_begin, block_end);
+        codec->OutputData(current_block);
+    }
+        // codec->OutputData(pcm);
 #ifdef CONFIG_USE_SERVER_AEC
         std::lock_guard<std::mutex> lock(timestamp_mutex_);
         timestamp_queue_.push_back(packet.timestamp);

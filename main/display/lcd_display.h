@@ -10,6 +10,9 @@
 #include <atomic>
 
 #include <Avatar.h>
+#include "M5Unified.h"
+#include "M5GFX.h"
+
 using namespace m5avatar;
 
 // Theme color structure
@@ -91,12 +94,6 @@ class SpiLcdDisplay : public LcdDisplay {
 
 // // avatar
 class avatarDisplay : public Display {
-   private:
-    Avatar* avatar = nullptr;
-
-   protected:
-    Avatar* _avatar = nullptr;
-
    protected:
     virtual bool Lock(int timeout_ms = 0) override {
         return true;
@@ -107,22 +104,43 @@ class avatarDisplay : public Display {
     }
 
    public:
+    Avatar* _avatar = nullptr;
+
     avatarDisplay(Avatar* avatar) : _avatar(avatar) {
     }
 
+
     virtual void SetEmotion(const char* emotion) override {
-        return;
+        struct Emotion {
+            const m5avatar::Expression avatar_emotion;
+            const char* text;
+        };
+
+        static const std::vector<Emotion> emotions = {
+            {m5avatar::Expression::Neutral, "neutral"},
+            {m5avatar::Expression::Happy, "happy"},
+            {m5avatar::Expression::Sad, "sad"},
+            {m5avatar::Expression::Angry, "angry"},
+            {m5avatar::Expression::Sleepy, "sleepy"},
+            {m5avatar::Expression::Doubt, "confused"}
+
+        };
+        std::string_view emotion_view(emotion);
+
+        auto it = std::find_if(emotions.begin(), emotions.end(), [&emotion_view](const Emotion& e) { return e.text == emotion_view; });
+        _avatar->setExpression(it->avatar_emotion);
+    return;
     }
     virtual void SetIcon(const char* icon) override {
         return;
     }
     virtual void SetPreviewImage(const lv_img_dsc_t* img_dsc) override {
-        _avatar->setSpeechText("Hello");
         return;
     }
     virtual void SetChatMessage(const char* role,
                                 const char* content) override {
-        _avatar->setSpeechText(content);
+  
+        // _avatar->setSpeechText(content);
         return;
     }
 
@@ -130,6 +148,7 @@ class avatarDisplay : public Display {
     virtual void SetTheme(const std::string& theme_name) override {
         return;
     }
+    
 };
 
 // QSPI LCD显示器

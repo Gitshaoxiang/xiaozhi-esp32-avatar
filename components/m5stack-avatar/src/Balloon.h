@@ -14,7 +14,7 @@
 typedef std::string String;
 #endif  // ARDUINO
 
-const int16_t TEXT_HEIGHT = 8;
+const int16_t TEXT_HEIGHT = 15;
 const int16_t TEXT_SIZE = 2;
 const int16_t MIN_WIDTH = 40;
 const int cx = 240;

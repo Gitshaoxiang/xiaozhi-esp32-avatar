@@ -185,7 +185,7 @@ void Avatar::start(int colorDepth) {
                        "drawLoop",      /* Name of the task */
                        2048,            /* Stack size in words */
                        ctx,             /* Task input parameter */
-                       1,               /* Priority of the task */
+                       15,               /* Priority of the task */
                        &drawTaskHandle, /* Task handle. */
                        APP_CPU_NUM);
 
@@ -193,7 +193,7 @@ void Avatar::start(int colorDepth) {
                        "facialLoop", /* Name of the task */
                        1024,         /* Stack size in words */
                        ctx,          /* Task input parameter */
-                       2,            /* Priority of the task */
+                       15,            /* Priority of the task */
                        NULL,         /* Task handle. */
                        APP_CPU_NUM);
 #endif
