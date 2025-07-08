@@ -19,7 +19,7 @@
 namespace m5avatar {
 
 class BaseEye : public Drawable {
-   protected:
+protected:
     uint16_t height_;
     uint16_t width_;
     bool is_left_;
@@ -36,20 +36,20 @@ class BaseEye : public Drawable {
     float open_ratio_;
     Expression expression_;
 
-   public:
+public:
     BaseEye(bool is_left);
     BaseEye(uint16_t width, uint16_t height, bool is_left);
     void update(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
 };
 
 class EllipseEye : public BaseEye {
-   public:
+public:
     using BaseEye::BaseEye;
     void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
 };
 
 class GirlyEye : public BaseEye {
-   public:
+public:
     using BaseEye::BaseEye;
     void drawEyeLid(M5Canvas *canvas);
     void overwriteOpenRatio();
@@ -57,7 +57,7 @@ class GirlyEye : public BaseEye {
 };
 
 class PinkDemonEye : public BaseEye {
-   public:
+public:
     using BaseEye::BaseEye;
     void drawEyeLid(M5Canvas *canvas);
     void overwriteOpenRatio();
@@ -65,10 +65,35 @@ class PinkDemonEye : public BaseEye {
 };
 
 class DoggyEye : public BaseEye {
-   public:
+public:
     using BaseEye::BaseEye;
     void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
 };
+
+class EyeNervous : public BaseEye {
+public:
+    using BaseEye::BaseEye;
+    void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
+};
+
+class EyeSleeping : public BaseEye {
+public:
+    using BaseEye::BaseEye;
+    void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
+};
+
+class EyeCool : public BaseEye {
+public:
+    using BaseEye::BaseEye;
+    void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
+};
+
+class EyeStar : public BaseEye {
+public:
+    using BaseEye::BaseEye;
+    void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
+};
+
 }  // namespace m5avatar
 
 #endif

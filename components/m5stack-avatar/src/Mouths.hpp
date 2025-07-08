@@ -19,7 +19,7 @@
 namespace m5avatar {
 
 class BaseMouth : public Drawable {
-   protected:
+protected:
     uint16_t min_width_;
     uint16_t max_width_;
     uint16_t min_height_;
@@ -35,34 +35,45 @@ class BaseMouth : public Drawable {
     float breath_;
     Expression expression_;
 
-   public:
+public:
     BaseMouth();
-    BaseMouth(uint16_t min_width, uint16_t max_width, uint16_t min_height,
-              uint16_t max_height);
+    BaseMouth(uint16_t min_width, uint16_t max_width, uint16_t min_height, uint16_t max_height);
 
     void update(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
 };
 
 class RectMouth : public BaseMouth {
-   public:
+public:
     using BaseMouth::BaseMouth;
     void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
 };
 
 class OmegaMouth : public BaseMouth {
-   public:
+public:
+    using BaseMouth::BaseMouth;
+    void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
+};
+
+class OmegaMouth2 : public BaseMouth {
+public:
+    using BaseMouth::BaseMouth;
+    void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
+};
+
+class OmegaMouth3 : public BaseMouth {
+public:
     using BaseMouth::BaseMouth;
     void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
 };
 
 class UShapeMouth : public BaseMouth {
-   public:
+public:
     using BaseMouth::BaseMouth;
     void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
 };
 
 class DoggyMouth : public BaseMouth {
-   public:
+public:
     using BaseMouth::BaseMouth;
     void draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx);
 };

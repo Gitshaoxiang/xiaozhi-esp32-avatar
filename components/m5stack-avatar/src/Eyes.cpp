@@ -329,4 +329,79 @@ void DoggyEye::draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx) {
                         background_color_);
 }
 
+void EyeNervous::draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx) {
+    this->update(canvas, rect, ctx);
+
+    if (this->is_left_) {
+        canvas->fillTriangle(center_x_ + 8, center_y_, center_x_ - 28,
+                             center_y_ - 28, center_x_ - 28, center_y_ + 28,
+                             primary_color_);
+
+        canvas->fillTriangle(center_x_, center_y_, center_x_ - 38,
+                             center_y_ - 28, center_x_ - 38, center_y_ + 28,
+                             background_color_);
+
+    } else {
+        canvas->fillTriangle(center_x_ - 8, center_y_, center_x_ + 28,
+                             center_y_ - 28, center_x_ + 28, center_y_ + 28,
+                             primary_color_);
+
+        canvas->fillTriangle(center_x_, center_y_, center_x_ + 38,
+                             center_y_ - 28, center_x_ + 38, center_y_ + 28,
+                             background_color_);
+    }
+}
+
+void EyeSleeping::draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx) {
+    this->update(canvas, rect, ctx);
+    canvas->fillRect(center_x_ - 20, center_y_ - 2, 40, 4, primary_color_);
+}
+
+void EyeCool::draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx) {
+    this->update(canvas, rect, ctx);
+    canvas->fillRect(center_x_ - 40, center_y_ - 30, 80, 60, primary_color_);
+    canvas->fillRect(center_x_ - 35, center_y_ - 25, 10, 50, background_color_);
+    canvas->fillRect(center_x_ - 15, center_y_ - 25, 10, 50, background_color_);
+    canvas->fillRect(center_x_ + 5, center_y_ - 25, 10, 50, background_color_);
+    canvas->fillRect(center_x_ + 25, center_y_ - 25, 10, 50, background_color_);
+    if (this->is_left_) {
+        canvas->fillRect(center_x_ + 40, center_y_ - 10, 60, 5, primary_color_);
+    } else {
+        canvas->fillRect(center_x_ - 100, center_y_ - 10, 60, 5,
+                         primary_color_);
+    }
+}
+
+void EyeStar::draw(M5Canvas *canvas, BoundingRect rect, DrawContext *ctx) {
+    this->update(canvas, rect, ctx);
+
+    const int outerRadius = 25;
+    const int innerRadius = 10;
+    const int points      = 5;
+
+    int starX[10];
+    int starY[10];
+
+    for (int i = 0; i < points; i++) {
+        float outerAngle = 2 * M_PI * i / points - M_PI / 2;
+        starX[2 * i]     = center_x_ + outerRadius * cos(outerAngle);
+        starY[2 * i]     = center_y_ + outerRadius * sin(outerAngle);
+
+        float innerAngle = 2 * M_PI * (i + 0.5) / points - M_PI / 2;
+        starX[2 * i + 1] = center_x_ + innerRadius * cos(innerAngle);
+        starY[2 * i + 1] = center_y_ + innerRadius * sin(innerAngle);
+    }
+
+    for (int i = 0; i < 10; i++) {
+        int next = (i + 1) % 10;
+        canvas->fillTriangle(center_x_, center_y_, starX[i], starY[i],
+                             starX[next], starY[next], primary_color_);
+    }
+
+    for (int i = 0; i < 10; i++) {
+        int next = (i + 1) % 10;
+        canvas->drawLine(starX[i], starY[i], starX[next], starY[next],
+                         TFT_BLACK);
+    }
+}
 }  // namespace m5avatar
